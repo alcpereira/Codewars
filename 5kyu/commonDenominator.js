@@ -24,9 +24,11 @@
 
 function convertFrac(lst) {
     div = lst.map((e) => e[1])
-    i = 1
-    while (!div.map((el) => i % el).every((e) => e === 0)) {
-        i += 1
+    lcm = 1
+    while (!div.map((el) => lcm % el).every((e) => e === 0)) {
+        lcm += 1
     }
-    return lst.map((e) => `(${i / e[1]},${i})`).join('')
+    return lst.map((e) => `(${lcm * e[0] / e[1]},${lcm})`).join('')
 }
+
+// Suggestion for future: When dealing with Maths, just write down the equation!
