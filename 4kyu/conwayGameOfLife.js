@@ -11,10 +11,10 @@
 // The return value should be a 2d array cropped around all of the living cells. (If there are no living cells, then return [[]].)
 
 class Cell {
-    constructor(x, y, live = 0) {
+    constructor(x, y, alive = 0) {
         this.x = x
         this.y = y
-        this.live = Boolean(live)
+        this.alive = Boolean(alive)
     }
 }
 
@@ -47,7 +47,7 @@ class Grid {
             let [x, y] = v
             let c = this.getCellByCoordinates(x, y)
             if (c) {
-                return c.live ? acc + 1 : acc
+                return c.alive ? acc + 1 : acc
             } else { return acc }
         }, 0)
         return i
@@ -58,7 +58,7 @@ class Grid {
         this.cells.forEach((cell) => {
             let count = this.countLiveNeighbours(cell)
             let alive
-            if (cell.live) {
+            if (cell.alive) {
                 if (count < 2) {
                     alive = false
                 } else if (count > 3) {
@@ -71,7 +71,7 @@ class Grid {
             }
             futureGen.push(new Cell(cell.x, cell.y, alive))
         })
-        // TODO : Add new dead cells all around
+        // Adding a contour of dead cells around the current grid
         this.xMin--
         this.yMin--
         this.xMax++
@@ -86,14 +86,13 @@ class Grid {
             futureGen.push(new Cell(j, this.yMin))
             futureGen.push(new Cell(j, this.yMax))
         }
-        // console.log(futureGen)
         this.generation++
         this.cells = futureGen
     }
 
     get output() {
         return this.cells
-        // Generate nested array for output
+        // TODO : Generate nested array for output
     }
 
 }
@@ -106,29 +105,10 @@ function getGeneration(cells, generations) {
     }
     return g.output
 }
-c = [[1, 1, 1, 0, 0, 0, 1, 0], [1, 0, 0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 1, 1, 1]]
 
+c = [[1, 1, 1, 0, 0, 0, 1, 0], [1, 0, 0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 1, 1, 1]]
 console.log(getGeneration(c, 16))
 
-// a.prettyPrint()
-// # O O
-// O # #
-// # # 0
-// console.log(a.cells[3])
-// console.log(a.countLiveNeighbours(a.getCellByCoordinates(2, 2)))
-// a.generateNewGeneration()
-// console.log(a.cells[3])
-
-// Generations: 0
-// [[1, 0, 0], [0, 1, 1], [1, 1, 0]]
-
-// Generations: 1
-// [[1, 0, 0], [0, 1, 1], [1, 1, 0]]
-
-// Generations: 2
-// [[1, 0, 0], [0, 1, 1], [1, 1, 0]]
-
-// Generations: 16
-// [[1, 1, 1, 0, 0, 0, 1, 0],
-// [1, 0, 0, 0, 0, 0, 0, 1],
-//     [0, 1, 0, 0, 0, 1, 1, 1]]
+// Current issues: 
+// 1) Not working lol
+// 2) Need cleaning for dead cells rows/cols (not super hard)
