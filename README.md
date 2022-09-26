@@ -1,6 +1,6 @@
 # CodeWars Challenges
 
-[Codewars](http://www.codewars.com/) challenges
+[Codewars](http://www.codewars.com/) challenges 
 To avoid spoiling answers on internet, all my answers are stored in the `answers` branch
 
 ## How It's Made:
