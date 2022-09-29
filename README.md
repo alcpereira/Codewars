@@ -3,6 +3,9 @@
 [Codewars](http://www.codewars.com/) challenges  
 To avoid spoiling answers on internet, all my answers are stored in the `answers` branch
 
+## Ranking
+Top 3.718%
+
 ## How It's Made:
 
 **Tech used:** 
