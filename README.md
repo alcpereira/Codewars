@@ -4,7 +4,7 @@
 To avoid spoiling answers on internet, all my answers are stored in the `answers` branch
 
 ## Ranking
-Top 3.518%
+Top 3.334%
 
 ## How It's Made:
 
