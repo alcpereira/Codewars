@@ -6,24 +6,26 @@ class Node {
 }
 
 function hasElementWithChildren(l) {
-  return l.some(v => v[v.length -1].children.length > 0)
+  return l.some(v => v[v.length - 1].children.length > 0)
 }
 
 function getPINs(observed) {
-  const edges = {1: [1, 2, 4],
-          2: [1, 2, 3, 5],
-          3: [2, 3, 6],
-          4: [1, 4, 5, 7],
-          5: [2, 4, 5, 6, 8],
-          6: [3, 5, 6, 9],
-          7: [4, 7, 8],
-          8: [5, 7, 8, 9, 0],
-          9: [6, 8, 9],
-          0: [0, 8]}
-  
+  const edges = {
+    1: [1, 2, 4],
+    2: [1, 2, 3, 5],
+    3: [2, 3, 6],
+    4: [1, 4, 5, 7],
+    5: [2, 4, 5, 6, 8],
+    6: [3, 5, 6, 9],
+    7: [4, 7, 8],
+    8: [5, 7, 8, 9, 0],
+    9: [6, 8, 9],
+    0: [0, 8]
+  }
+
   let root = new Node('')
   let currNodes = [root]
-  
+
   for (const number of observed.split('')) {
     e = edges[number]
     let nextNodes = []
@@ -36,7 +38,7 @@ function getPINs(observed) {
     }
     currNodes = nextNodes
   }
-  
+
   let outArray = [[root]]
   let output = []
   while (hasElementWithChildren(outArray)) {
@@ -48,10 +50,10 @@ function getPINs(observed) {
       outArray.push([...a, child])
     }
   }
-  
+
   console.log(outArray)
-  
+
   // Descends all nodes until leaves & add to output
-  
-  
+
+
 }

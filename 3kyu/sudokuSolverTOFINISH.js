@@ -1,76 +1,125 @@
 // https://www.codewars.com/kata/5296bc77afba8baa690002d7
 
-var puzzle = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9]];
+// Takes way too long
+let puzzle = [
+  [5, 3, 0, 0, 7, 0, 0, 0, 0],
+  [6, 0, 0, 1, 9, 5, 0, 0, 0],
+  [0, 9, 8, 0, 0, 0, 0, 6, 0],
+  [8, 0, 0, 0, 6, 0, 0, 0, 3],
+  [4, 0, 0, 8, 0, 3, 0, 0, 1],
+  [7, 0, 0, 0, 2, 0, 0, 0, 6],
+  [0, 6, 0, 0, 0, 0, 2, 8, 0],
+  [0, 0, 0, 4, 1, 9, 0, 0, 5],
+  [0, 0, 0, 0, 8, 0, 0, 7, 9]];
 
-let checkRow = (puzzle, rowIndex) => {
-    let currentRow = puzzle[rowIndex]
-    currentRow = currentRow.filter(i => i !== 0)
-    return currentRow.filter((v, i) => currentRow.indexOf(v) !== i).length === 0
+// With 3 filled row (first 3), it takes 4s. 
+// let puzzle = [
+//   [5, 3, 4, 6, 7, 8, 9, 1, 2],
+//   [6, 7, 2, 1, 9, 5, 3, 4, 8],
+//   [1, 9, 8, 3, 4, 2, 5, 6, 7],
+//   [8, 0, 0, 0, 6, 0, 0, 0, 3],
+//   [4, 0, 0, 8, 0, 3, 0, 0, 1],
+//   [7, 0, 0, 0, 2, 0, 0, 0, 6],
+//   [0, 6, 0, 0, 0, 0, 2, 8, 0],
+//   [0, 0, 0, 4, 1, 9, 0, 0, 5],
+//   [0, 0, 0, 0, 8, 0, 0, 7, 9]];
+
+// [[5,3,4,6,7,8,9,1,2],
+// [6,7,2,1,9,5,3,4,8],
+// [1,9,8,3,4,2,5,6,7],
+// [8,5,9,7,6,1,4,2,3],
+// [4,2,6,8,5,3,7,9,1],
+// [7,1,3,9,2,4,8,5,6],
+// [9,6,1,5,3,7,2,8,4],
+// [2,8,7,4,1,9,6,3,5],
+// [3,4,5,2,8,6,1,7,9]] 
+
+function suggestValidEntries(puzzle, row, col) {
+  let values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const rowValues = new Set(puzzle[row])
+  const colValues = new Set(puzzle.map(e => e[col]))
+  let [rowSubGrid, colSubGrid] = [Math.floor(row / 3), Math.floor(col / 3)]
+  let subGridValues = new Set()
+  for (let i = rowSubGrid * 3; i < (rowSubGrid + 1) * 3; i++) {
+    for (let j = colSubGrid * 3; j < (colSubGrid + 1) * 3; j++) {
+      subGridValues.add(puzzle[i][j])
+    }
+  }
+  return values.filter(e => !rowValues.has(e) && !colValues.has(e) && !subGridValues.has(e))
 }
 
-let checkCol = (puzzle, colIndex) => {
-    let currentCol = puzzle.reduce((acc, v) => [...acc, v[colIndex]], [])
-    currentCol = currentCol.filter(i => i !== 0)
-    return currentCol.filter((v, i) => currentCol.indexOf(v) !== i).length === 0
+function checkValidEntry(puzzle, row, col, entry) {
+  let values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const rowValues = new Set(puzzle[row])
+  const colValues = new Set(puzzle.map(e => e[col]))
+  let [rowSubGrid, colSubGrid] = [Math.floor(row / 3), Math.floor(col / 3)]
+  let subGridValues = new Set()
+  for (let i = rowSubGrid * 3; i < (rowSubGrid + 1) * 3; i++) {
+    for (let j = colSubGrid * 3; j < (colSubGrid + 1) * 3; j++) {
+      subGridValues.add(puzzle[i][j])
+    }
+  }
+  return values.filter(e => !rowValues.has(e) && !colValues.has(e) && !subGridValues.has(e)).includes(entry)
 }
 
-let checkCellGrid = (puzzle, rowIndex, colIndex) => {
-    [row, col] = [rowIndex, colIndex].map(e => Math.floor(e / 3))
-    rowMin = row * 3
-    colMin = col * 3
-    rowMax = (row + 1) * 3
-    colMax = (col + 1) * 3
-    gridCells = []
-    for (let r = rowMin; r < rowMax; r++) {
-        for (let c = colMin; c < colMax; c++) {
-            gridCells = [...gridCells, puzzle[r][c]]
+function isSolved(puzzle) {
+  for (let row = 0; row < puzzle.length; row++) {
+    for (let col = 0; col < puzzle[0].length; col++) {
+      const rowValues = new Set(puzzle[row])
+      if (rowValues.has(0) || rowValues.size < 9) { return false }
+      const colValues = new Set(puzzle.map(e => e[col]))
+      if (colValues.has(0) || colValues.size < 9) { return false }
+      let [rowSubGrid, colSubGrid] = [Math.floor(row / 3), Math.floor(col / 3)]
+      let subGridValues = new Set()
+      for (let i = rowSubGrid * 3; i < (rowSubGrid + 1) * 3; i++) {
+        for (let j = colSubGrid * 3; j < (colSubGrid + 1) * 3; j++) {
+          subGridValues.add(puzzle[i][j])
         }
+      }
+      if (subGridValues.has(0) || subGridValues.size < 9) { return false }
     }
-    gridCells = gridCells.filter(i => i !== 0)
-    return gridCells.filter((v, i) => gridCells.indexOf(v) !== i).length === 0
+  }
+  return true
 }
 
-
-let checkValidEntry = (puzzle, rowIndex, colIndex) => {
-    return checkRow(puzzle, rowIndex) && checkCol(puzzle, colIndex) && checkCellGrid(puzzle, rowIndex, colIndex)
-}
-
-let checkValidGrid = (puzzle) => {
-    for (let rowIndex = 0; rowIndex < puzzle.length; rowIndex++) {
-        for (let colIndex = 0; colIndex < puzzle[rowIndex].length; colIndex++) {
-            if (!checkRow(puzzle, rowIndex) || !checkCol(puzzle, colIndex) || !checkCellGrid(puzzle, rowIndex, colIndex)) {
-                return false
-            }
+function solve2(puzzle) {
+  for (let row = 0; row < puzzle.length; row++) {
+    for (let col = 0; col < puzzle[0].length; col++) {
+      if (puzzle[row][col] === 0) {
+        const entries = suggestValidEntries(puzzle, row, col)
+        if (entries.length === 0) { return false }
+        for (const entry of entries) {
+          puzzle[row][col] = entry
+          if (solve(puzzle)) { return true }
         }
+        puzzle[row][col] = 0
+      }
     }
-    return true
+  }
+  return true
 }
 
-console.log(checkValid(puzzle, 4, 4))
-
-let solvePuzzle = (puzzle) => {
-    if (checkValidGrid(puzzle)) {
-        return puzzle
-    }
-
-
-    for (let rowIndex = 0; rowIndex < puzzle.length; rowIndex++) {
-        for (let colIndex = 0; colIndex < puzzle[rowIndex].length; colIndex++) {
-            cell = puzzle[rowIndex][colIndex]
-            if (cell === 0) {
-                for (let i = 1; i < 10; i++) {
-
-                }
-            }
+function solve(puzzle) {
+  if (isSolved(puzzle)) { return true }
+  for (let row = 0; row < puzzle.length; row++) {
+    for (let col = 0; col < puzzle[0].length; col++) {
+      if (puzzle[row][col] === 0) {
+        for (let v = 1; v < 10; v++) {
+          if (checkValidEntry(puzzle, row, col, v)) {
+            puzzle[row][col] = v
+            if (solve(puzzle)) { return true }
+            puzzle[row][col] = 0
+          }
         }
+      }
     }
+  }
+  return false
 }
+
+function sudoku(puzzle) {
+  return solve(puzzle) ? puzzle : false
+}
+
+console.log(sudoku(puzzle).join(','))
+
